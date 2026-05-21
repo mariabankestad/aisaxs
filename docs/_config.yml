@@ -1,0 +1,15 @@
+# Jekyll configuration for the AI-SAXS documentation site.
+# Published via GitHub Pages from this /docs folder on the main branch.
+
+title: AI-SAXS
+description: >-
+  Collaborative SAXS-analysis tools for nanoparticle systems.
+  First released application: lipid nanoparticles.
+
+# GitHub Pages built-in theme. Cayman gives a clean header banner and
+# readable typography for long-form content; no extra plugins needed.
+theme: jekyll-theme-cayman
+
+# Maintainer-only notes; not part of the published site.
+exclude:
+  - README.md

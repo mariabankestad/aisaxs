@@ -1,0 +1,31 @@
+# Configuration for the LNP forward model.
+#
+# This file is loaded by the fitting scripts and the surrogate tutorial.
+# Only `Parameter_ranges` and the q-grid fields (n_q, q_min, q_max) are
+# read by the production scripts. The remaining fields at the bottom are
+# used only by `preprocess_ml_data.py` when building splits from raw
+# simulation CSVs, which most users will not run.
+
+n_q: 500
+q_min: 0.001
+q_max: 0.2
+
+Parameter_ranges:
+  # Interior (Gaussian random field) parameters
+  GRF_shift:          {min: -1.,  max: 1.}    # mean offset of interior density relative to solvent
+  w_q1:               {min: 0,    max: 1}     # weight of the first log-normal spectral component (the second has weight 1 - w_q1)
+  m_q1:               {min: 0.05, max: 0.15}  # peak position of the first spectral component (A^-1)
+  m_q2:               {min: 0.05, max: 0.15}  # peak position of the second spectral component (A^-1)
+  s_q1:               {min: 0.01, max: 0.15}  # width of the first spectral component (A^-1)
+  s_q2:               {min: 0.01, max: 0.15}  # width of the second spectral component (A^-1)
+  # Particle size
+  m_R:                {min: 100,  max: 500}   # mean outer particle radius (A)
+  # Shell parameters
+  shell_thickness:    {min: 40,   max: 70}    # uniform shell thickness (A)
+  relative_rho_shell: {min: 0.7,  max: 1.3}   # shell electron density relative to mean interior density
+
+# --- Fields below are only for preprocess_ml_data.py ---
+name: setup_shell_shift
+parameter_path: theta_all.csv
+simulated_data_path: generated_data
+simulated_glob: "lnp_saxs_part_*.csv"

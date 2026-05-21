@@ -1,0 +1,13 @@
+torch>=2.0
+numpy
+scipy
+pandas
+pyyaml
+scikit-learn
+matplotlib
+
+# JAX is required by aisaxs/physical_models/lnp_model.py, the physical SAXS
+# simulator. It is exercised by notebooks/tutorial_simulation_model.ipynb. The
+# fitting, preprocessing, and surrogate training scripts do not import JAX.
+jax
+jaxlib

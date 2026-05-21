@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Project outputs (results, figures, intermediate artifacts)
+results/
+final_figures/
+outputs/
+checkpoints/
+
+# Large training tensors are hosted externally (see data/README.md)
+data/lnp/setup_shell_shift/*.pt
+# but a small metadata.pt with normalization stats ships with the repo
+# so the surrogate tutorial works out of the box
+!data/lnp/setup_shell_shift/metadata.pt
+data/lnp/generated_data/
+
+# LaTeX / build artifacts (in case any accidentally land here)
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Windows download-source metadata stubs
+*:Zone.Identifier
