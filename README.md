@@ -1,6 +1,5 @@
 # AI-SAXS
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20338599.svg)](https://doi.org/10.5281/zenodo.20338599)
 
 A differentiable framework for fitting one-dimensional SAXS curves of
 polydisperse nanoparticles, including systems with heterogeneous interior
