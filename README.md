@@ -1,10 +1,19 @@
 # AI-SAXS
 
 
-A differentiable framework for fitting one-dimensional SAXS curves of
-polydisperse nanoparticles, including systems with heterogeneous interior
-structure (such as lipid nanoparticles) where standard analytical models
-do not apply.
+A differentiable SAXS fitting framework for nanoparticles whose size
+distribution and internal structure cannot be described well by simple
+analytical form factors.
+
+It combines:
+- analytical SAXS models for homogeneous and core-shell particles,
+- a physics-based simulator for heterogeneous LNP-like particles,
+- a neural surrogate that makes the simulator fast enough for fitting,
+- multi-start optimisation and ensemble analysis to expose non-identifiability.
+
+The main use case is fitting one-dimensional SAXS curves from polydisperse
+nanoparticles and identifying which structural parameters are actually
+constrained by the data.
 
 <p align="center">
   <img src="docs/figures/hero2.png" alt="Top: a SAXS experiment turns a nanoparticle sample into a 1D scattering curve. Bottom: the framework runs this in reverse, mapping the measured curve back to sample information via a neural surrogate of the physics-based simulator." width="90%">
