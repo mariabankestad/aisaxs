@@ -1,15 +1,17 @@
-# AI-SAXS
+---
+layout: default
+---
 
-AI-SAXS is a collaborative project between academic, industry, and
-synchrotron partners (including MAX IV) developing modern SAXS-analysis
-tools for nanoparticle systems.
+AI-SAXS is a collaboration between academic, industry, and synchrotron
+partners (including MAX IV), developing modern tools for small-angle
+X-ray scattering (SAXS) analysis of nanoparticle systems.
 
-This site documents the framework's first released application:
-structural characterization of lipid nanoparticles (LNPs) from
-one-dimensional SAXS data.
+This site introduces the framework through its first application:
+recovering the structure and size distribution of lipid nanoparticles
+(LNPs) from a one-dimensional SAXS curve.
 
-- [**LNP walkthrough**](lnp_saxs_walkthrough.md) — the framework
-  explained from the SAXS inverse problem to the retained-ensemble
-  output, written for readers who want the concepts before the code.
+- [**LNP walkthrough**](lnp_saxs_walkthrough.html) — the ideas, from the
+  SAXS inverse problem to what the data can and cannot tell you, written
+  for readers who want the concepts before the code.
 - [GitHub repository](https://github.com/mariabankestad/aisaxs) — code,
-  data, tutorials, full README.
+  data, tutorials, and the full technical README.

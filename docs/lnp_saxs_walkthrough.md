@@ -1,4 +1,8 @@
-# AI-SAXS: from LNP parameters to SAXS curves
+---
+layout: default
+---
+
+# From a SAXS curve to lipid-nanoparticle structure
 
 A SAXS measurement of lipid nanoparticles (LNPs) gives you a
 one-dimensional curve. This page walks through how that curve becomes a
@@ -17,7 +21,7 @@ them. X-rays are scattered by electron-density variations inside the
 particles. The scattered radiation forms a two-dimensional ring pattern
 on the detector; averaging azimuthally around the centre collapses this
 pattern into a single one-dimensional curve, scattered intensity as a
-function of the wavevector $q$ (a quantity related to the angle of
+function of the wavevector *q* (a quantity related to the angle of
 scattering).
 
 <p align="center">
@@ -63,12 +67,12 @@ fast, and the model stays analytical.
 </p>
 
 The smoothing is the key effect. Each individual radius produces a curve
-with sharp oscillations at distinct $q$ values. The size-averaged curve
-inherits the shape of those individual curves at low $q$ but loses the
-oscillations at high $q$: the minima from different radii fall at
-different $q$ and fill each other in. What you measure on a real
+with sharp oscillations at distinct *q* values. The size-averaged curve
+inherits the shape of those individual curves at low *q* but loses the
+oscillations at high *q*: the minima from different radii fall at
+different *q* and fill each other in. What you measure on a real
 polydisperse sample is the smooth curve, and the *spread* of the curve
-(how quickly the high-$q$ shape decays) carries information about the
+(how quickly the high-*q* shape decays) carries information about the
 width of the radius distribution.
 
 This is enough for many systems: gold nanoparticles, simple silica
@@ -127,8 +131,8 @@ than seconds. From the optimizer's point of view it looks like the same
 forward model, just thousands of times quicker, and accurate enough that
 its predictions match the simulator well within the noise level of an
 experimental SAXS curve. With the surrogate in place, fitting an LNP SAXS
-curve becomes practical: thousands of starting points, a thousand
-iterations each, finished in minutes on a single GPU.
+curve becomes practical: hundreds of independent optimizations run in
+under a minute on a single GPU, a task that would otherwise take days.
 
 ## What the paper covers
 
