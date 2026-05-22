@@ -1,5 +1,7 @@
 # AI-SAXS
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20338599.svg)](https://doi.org/10.5281/zenodo.20338599)
+
 A differentiable framework for fitting one-dimensional SAXS curves of
 polydisperse nanoparticles, including systems with heterogeneous interior
 structure (such as lipid nanoparticles) where standard analytical models
@@ -212,9 +214,11 @@ to set up a new particle system with its own ranges.
 
 ## Training data
 
-The large training tensors are hosted externally — see
-[`data/README.md`](data/README.md) for the download URL, expected layout,
-and checksums. To build the splits from raw CSVs of simulated parameters
+The large training tensors, the experimental and synthetic benchmark data,
+and the pretrained weights are archived at Zenodo
+(https://doi.org/10.5281/zenodo.20338599). See
+[`data/README.md`](data/README.md) for the expected layout and per-file
+details. To build the splits from raw CSVs of simulated parameters
 and SAXS curves, run
 
 ```bash
