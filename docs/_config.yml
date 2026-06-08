@@ -1,21 +1,43 @@
 # Jekyll configuration for the AI-SAXS documentation site.
-# Published via GitHub Pages from this /docs folder on the main branch.
+
+# Published via GitHub Pages from the /docs folder on the main branch.
 
 title: AI-SAXS
 description: >-
-  AI-SAXS is a differentiable machine-learning framework for fitting
-  small-angle X-ray scattering (SAXS) curves from lipid nanoparticles
-  and recovering nanoparticle size, internal structure, and size distributions.
+AI-SAXS is a differentiable machine-learning framework for fitting
+small-angle X-ray scattering (SAXS) curves from lipid nanoparticles
+and recovering nanoparticle size, internal structure, and size distributions.
 
-# Project page served at https://mariabankestad.github.io/aisaxs/
-# baseurl must match the repo name so the theme's CSS and assets resolve.
+# Main site settings.
+
+# Project page served at: https://mariabankestad.github.io/aisaxs/
+
+# The baseurl must match the repository name so CSS and assets resolve correctly.
+
 url: "https://mariabankestad.github.io"
 baseurl: "/aisaxs"
 
-# GitHub Pages built-in theme. Cayman gives a clean header banner and
-# readable typography for long-form content; no extra plugins needed.
+# GitHub Pages built-in theme.
+
+# Cayman gives a clean project-page layout and readable typography.
+
 theme: jekyll-theme-cayman
 
-# Maintainer-only notes; not part of the published site.
+# Repository metadata.
+
+author: "Maria Bånkestad"
+repository: "mariabankestad/aisaxs"
+
+# Optional links used by some themes/plugins and useful for future SEO extensions.
+
+github_username: mariabankestad
+
+# Files excluded from the published documentation site.
+
 exclude:
-  - README.md
+
+* README.md
+* Gemfile
+* Gemfile.lock
+* node_modules
+* vendor
