@@ -3,8 +3,9 @@
 
 title: AI-SAXS
 description: >-
-  Turning one-dimensional SAXS curves into nanoparticle structure and
-  size, starting with lipid nanoparticles.
+  AI-SAXS is a differentiable machine-learning framework for fitting
+  small-angle X-ray scattering (SAXS) curves from lipid nanoparticles
+  and recovering nanoparticle size, internal structure, and size distributions.
 
 # Project page served at https://mariabankestad.github.io/aisaxs/
 # baseurl must match the repo name so the theme's CSS and assets resolve.
