@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-SAXS: how the method works</title>
+<meta name="description" content="The conditional flow-matching method in one figure: its parts, how they are connected, how it is trained and what changing the question does.">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<div class="page model">
+  <nav class="top">
+    <a class="brand" href="index.html">AI-SAXS</a>
+    <a href="lnp.html">Lipid nanoparticles</a>
+    <a href="cellulose.html">Cellulose</a>
+    <a class="current" href="model.html">How the method works</a>
+    <span class="spacer"></span>
+    <a href="https://github.com/mariabankestad/aisaxs-sbi">Code</a>
+  </nav>
+
+  <h1>How the method works</h1>
+  <p class="lead">A measurement, for us a SAXS curve, rarely pins down one set of parameters. So we do not ask for one answer. A neural network generates the combinations that fit: the posterior. If we already know something about one parameter, fewer combinations remain. One trained network handles all these cases.</p>
+
+  <section>
+    <div class="explore" id="explore"></div>
+  </section>
+
+  <section>
+    <h2>How the network learns this</h2>
+    <p>All it needs is a simulator. Which parameters are hidden changes from one example to the next, so the same network learns to answer whatever is hidden.</p>
+    <ol class="train3"><li><b>Simulate</b><span>The simulator draws parameters and makes their measurement.</span></li><li><b>Make a training example</b><span>Hide some parameters and keep the others. Replace the hidden ones by a point between random noise and their true values.</span></li><li><b>Train the network</b><span>Ask for the direction from the noise to the true values, and correct the network when it is wrong.</span></li></ol>
+  </section>
+
+  <section>
+    <details class="tech">
+      <summary>Technical details</summary>
+      <p>One training example with four parameters:</p>
+      <table class="example">
+        <thead><tr><th>Parameter</th><th>True value</th><th>Role drawn</th><th>What the network sees</th><th>What it must answer</th></tr></thead>
+        <tbody>
+          <tr><td>θ₁</td><td>0.82</td><td>unknown</td><td>a point between noise and 0.82</td><td>the direction from the noise to 0.82</td></tr>
+          <tr><td>θ₂</td><td>0.15</td><td>unknown</td><td>a point between noise and 0.15</td><td>the direction from the noise to 0.15</td></tr>
+          <tr><td>θ₃</td><td>0.55</td><td>known roughly, ± 0.1</td><td>0.61, the true value with a random error, and 0.1</td><td>nothing</td></tr>
+          <tr><td>θ₄</td><td>0.30</td><td>known exactly</td><td>0.30</td><td>nothing</td></tr>
+        </tbody>
+      </table>
+      <p class="note">The roughly known parameter is shown with a random error on purpose, and its true value is never shown. This is why the network learns to treat such a value as a hint and not as the truth.</p>
+<pre class="code"># training
+repeat many times:
+    θ, x  = simulator()                  # parameters and their measurement
+    roles = random role for each parameter
+    ε     = noise,   t = random time between 0 and 1
+    z     = (1 − t)·ε + t·θ              # a point between noise and the truth
+    v     = network(z, known values, roles, t, x)
+    loss  = (v − (θ − ε))²               # on the unknown parameters only
+
+# using the trained network
+s = encoder(x)                           # the measurement, encoded once
+z = noise for the unknown parameters
+for t from 0 to 1 in small steps:
+    v = network(z, known values, roles, t, s)
+    z = z + step · v                     # only the unknown parameters move
+return z                                 # samples of the posterior</pre>
+      <p class="note">The method is called flow matching, here with masking: the hidden parameters are the masked ones. The network answers the question it is given. Whether a known value agrees with the measurement is a separate check, made against the samples from the measurement alone; the cellulose page shows it.</p>
+    </details>
+  </section>
+
+  <section>
+    <h2>More</h2>
+    <p>Want to see this on the cellulose case? Go to the <a href="cellulose.html">cellulose page</a>.</p>
+    <p class="note">The method, its training and its validation are described in the paper. The code and the trained networks are on <a href="https://github.com/mariabankestad/aisaxs-sbi">GitHub</a>.</p>
+  </section>
+</div>
+<script src="js/common.js"></script>
+<script src="js/model_lab.js"></script>
+</body>
+</html>

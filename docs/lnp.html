@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-SAXS: lipid nanoparticles</title>
+<meta name="description" content="A neural surrogate of a physical SAXS simulator for lipid nanoparticles, fitted many times to one curve: see what the curve constrains and what it leaves open.">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<div class="page model">
+  <nav class="top">
+    <a class="brand" href="index.html">AI-SAXS</a>
+    <a class="current" href="lnp.html">Lipid nanoparticles</a>
+    <a href="cellulose.html">Cellulose</a>
+    <a href="model.html">How the method works</a>
+    <span class="spacer"></span>
+    <a href="https://github.com/mariabankestad/aisaxs-poly">Code</a>
+  </nav>
+
+  <h1>Lipid nanoparticles</h1>
+  <p class="lead">A simulated SAXS curve from a population of lipid nanoparticles, analysed with the released code from the paper. A neural network that imitates the physical simulator (a surrogate) predicts the curve of a particle in a millisecond, so the fit can be started from a thousand points. The fits that match the curve equally well show which structural parameters the curve fixes and which it leaves open.</p>
+
+  <section id="forward">
+    <h2>From material to curve</h2>
+    <p class="note">The simulated particle and its curve. A spherical particle has a uniform shell and an interior whose density varies on a characteristic length scale; a sample contains particles of many sizes. One random interior is kept fixed while the parameters change. White is the solvent density, blue is denser, orange less dense. The curve is the surrogate network's prediction, averaged over the size distribution as in the fit.</p>
+    <div class="panels forward">
+      <div class="panel">
+        <p class="title"><span class="view-label">Cross-section, 100 nm wide</span><span class="spacer" style="flex:1"></span><button type="button" class="zoom">Zoom out</button></p>
+        <canvas class="material"></canvas>
+      </div>
+      <div class="panel">
+        <p class="title"><span class="legend"><i class="cond"></i>This material</span><span class="legend"><i class="free"></i>Kept curve</span><span class="spacer" style="flex:1"></span><button type="button" class="keep">Keep this curve</button></p>
+        <canvas class="curve"></canvas>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="group"><h4>Size</h4><div class="size"></div></div>
+      <div class="group"><h4>Shell</h4><div class="shell"></div></div>
+      <div class="group"><h4>Interior</h4><div class="interior"></div></div>
+    </div>
+  </section>
+
+  <section id="infer">
+    <h2>From curve to material</h2>
+    <div class="pair">
+      <figure>
+        <canvas class="material pic-a"></canvas>
+        <figcaption>The material behind the curve</figcaption>
+      </figure>
+      <figure>
+        <canvas class="material pic-b"></canvas>
+        <figcaption>Another material that fits it</figcaption>
+      </figure>
+      <div class="panel pair-curve">
+        <p class="title"><span class="legend"><i class="cond"></i>Left</span><span class="legend"><i class="alt"></i>Right</span></p>
+        <canvas class="alt-curve"></canvas>
+      </div>
+    </div>
+    <p class="note pair-note"></p>
+
+    <h3>How the fit works</h3>
+    <figure class="scheme">
+      <img src="figures/lnp_scheme.svg" alt="Schematic: the physical simulator produces training curves, a neural surrogate learns to predict them, the fitter averages the surrogate over a size distribution and adjusts the parameters by gradient steps from many starting points, and the near-optimal fits are kept as an ensemble">
+    </figure>
+    <p class="note">The physical simulator builds a particle, interior realization included, and computes its curve in about a second. The surrogate network, trained on its output, does the same in a millisecond and is differentiable, so a fit can follow the gradient. The fit averages the network over the size distribution, compares with the measured curve and adjusts all parameters together. It is started from a thousand points spread over the parameter space; the fits that reach the curve equally well are kept. Where they agree, the curve has decided; where they spread, it has not. Schematic.</p>
+
+    <h3>What the fits say about each parameter</h3>
+    <p class="note fits-note"></p>
+
+    <div class="panels">
+      <div class="panel">
+        <p class="title"><span class="legend"><i class="obs"></i>Simulated measurement</span><span class="legend"><i class="cond"></i>Kept fits</span><span class="legend"><i class="alt"></i>Selected fit</span></p>
+        <canvas class="curve"></canvas>
+      </div>
+      <div class="panel">
+        <p class="title"><span class="legend"><i class="free"></i>Other restarts</span><span class="legend"><i class="cond"></i>Kept fits</span></p>
+        <div class="joint-wrap">
+          <canvas class="joint"></canvas>
+          <select class="axis-pick pair-y" aria-label="vertical axis"></select>
+          <select class="axis-pick pair-x" aria-label="horizontal axis"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <span>Click a fit in the plot, or on a track, to see its curve and its particle.</span>
+      <label><input type="checkbox" class="show-truth"> Show the true values</label>
+    </div>
+    <div class="fitrow">
+      <div class="params"></div>
+      <div class="panel fitpic">
+        <p class="title"><span class="fit-label"></span></p>
+        <canvas class="material pic-fit"></canvas>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="data/lnp_forward.js"></script>
+<script src="data/lnp_data.js"></script>
+<script src="js/common.js"></script>
+<script src="js/lnp_grf.js"></script>
+<script src="js/lnp_forward.js"></script>
+<script src="js/lnp_infer.js"></script>
+</body>
+</html>

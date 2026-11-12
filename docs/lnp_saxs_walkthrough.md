@@ -11,7 +11,7 @@ code. General scientific background is assumed; no SAXS or
 machine-learning expertise required.
 
 The code, tutorials, and full technical reference are in the
-[GitHub repository](https://github.com/mariabankestad/aisaxs).
+[GitHub repository](https://github.com/mariabankestad/aisaxs-poly).
 
 ## What does a SAXS experiment give us?
 
@@ -148,7 +148,7 @@ and the synthetic and experimental validation are in the paper.
 
 ## Further reading
 
-- [GitHub repository](https://github.com/mariabankestad/aisaxs) — code,
+- [GitHub repository](https://github.com/mariabankestad/aisaxs-poly) — code,
   tutorials, full technical reference.
 - The paper (in preparation) for the mathematical treatment and the
   synthetic and experimental validation.

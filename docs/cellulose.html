@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-SAXS: cellulose</title>
+<meta name="description" content="Conditional inference for SAXS of cellulose: lock one parameter and see how the posterior over the others changes.">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<div class="page model">
+  <nav class="top">
+    <a class="brand" href="index.html">AI-SAXS</a>
+    <a href="lnp.html">Lipid nanoparticles</a>
+    <a class="current" href="cellulose.html">Cellulose</a>
+    <a href="model.html">How the method works</a>
+    <span class="spacer"></span>
+    <a href="https://github.com/mariabankestad/aisaxs-sbi">Code</a>
+  </nav>
+
+  <h1>Cellulose</h1>
+  <p class="lead">A simulated SAXS curve with known parameters, analysed with the trained network from the paper. The network gives the posterior: all combinations of the nine structural parameters that fit the curve. Tell it one parameter, exactly or roughly, and it updates the answer without retraining.</p>
+
+  <section id="forward">
+    <h2>From material to curve</h2>
+    <p class="note">The simulated material and its curve. One random realization is kept fixed while the parameters change, so fibrils grow and thin out in place; the curve is averaged over six such realizations. Darker means denser. The fibril slider steps the simulator's packing parameter and shows the number of fibrils it actually places, per µm² of material. Scattering depends on the density differences, so the three densities change the curve but not the geometry.</p>
+    <div class="panels forward">
+      <div class="panel">
+        <p class="title"><span class="view-label">Whole simulated box, 372 nm</span><span class="spacer" style="flex:1"></span><button type="button" class="zoom">Zoom in</button></p>
+        <canvas class="material"></canvas>
+      </div>
+      <div class="panel">
+        <p class="title"><span class="legend"><i class="cond"></i>This material</span><span class="legend"><i class="free"></i>Kept curve</span><span class="spacer" style="flex:1"></span><button type="button" class="keep">Keep this curve</button></p>
+        <canvas class="curve"></canvas>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="group"><h4>Fibrils</h4><div class="fibrils"></div></div>
+      <div class="group"><h4>Matrix</h4><div class="matrix"></div></div>
+      <div class="group"><h4>Densities</h4><div class="densities"></div></div>
+    </div>
+  </section>
+
+  <section id="infer">
+    <h2>From curve to material</h2>
+    <div class="pair">
+      <figure>
+        <img src="figures/cellulose_material_a.png" alt="Simulated cross-section shaded by density: dense fibrils in a lighter matrix and interstitial phase">
+        <figcaption>The material behind the curve</figcaption>
+      </figure>
+      <figure>
+        <img src="figures/cellulose_material_b.png" alt="A different simulated cross-section: light fibrils in a dense matrix that fills most of the material">
+        <figcaption>Another material that fits the curve</figcaption>
+      </figure>
+      <div class="panel pair-curve">
+        <p class="title"><span class="legend"><i class="cond"></i>Left</span><span class="legend"><i class="alt"></i>Right</span></p>
+        <canvas class="alt-curve"></canvas>
+      </div>
+    </div>
+    <p class="note">Simulated cross-sections, 89 nm wide, darker where denser. Left, the material that produced the curve: dense fibrils, a matrix covering 41 % and a lighter interstitial phase. Right, another material from the posterior: the matrix covers 71 % and the fibrils are the lightest phase. Their curves are nearly the same.</p>
+
+    <h3>How the network answers</h3>
+    <figure class="scheme">
+      <img src="figures/method_overview.png" alt="Overview figure from the paper. (a) A measured curve and a query: theta 1 and theta 2 unknown, theta 3 known with an uncertainty, theta 4 known exactly. (b) An encoder compresses the curve into K summary tokens, computed once and reused across queries. (c) A conditional flow transforms noise at t = 0 into the posterior at t = 1 for the unknown parameters, with the summary tokens and the known parameters as fixed conditioning. (d) The joint posterior of theta 1 and theta 2.">
+    </figure>
+    <p class="note">The overview figure from the paper. (a)&nbsp;A curve is given together with a question. In the example, θ₁ and θ₂ are unknown, θ₃ is known with an uncertainty and θ₄ is known exactly. (b)&nbsp;The curve is compressed into a few summary tokens, which are computed once and reused for every question. (c)&nbsp;A flow transforms noise into samples of the unknown parameters, with the known information kept fixed as input. (d)&nbsp;The result is the joint posterior of the unknown parameters.</p>
+    <p class="note">On this page the curve is the simulated SAXS curve above and the parameters are the nine structural parameters. Locking a parameter below makes it known, and the same trained network is asked again. Whether the curve is compatible with the locked value is assessed separately. The network itself is described on the page <a href="model.html">How the method works</a>.</p>
+
+    <h3>What the curve says about each parameter</h3>
+    <p class="note">Posterior samples from one of the three trained networks, precomputed for a grid of known values. Window 0.01&ndash;0.30 &Aring;<sup>&minus;1</sup>. The curve fixes the fibril radius almost to a point, and the size spread, packing and separation nearly as closely; the densities and the matrix fraction it leaves open, and with them the number of fibrils per area. Lock the radius at another value and the check flags it: the curve does not allow that value. The number shown by the check is a percentile; below 0.01 it is flagged as a conflict.</p>
+
+    <div class="panels">
+      <div class="panel">
+        <p class="title"><span class="legend"><i class="obs"></i>Simulated measurement</span><span class="legend"><i class="cond"></i>Predicted from posterior samples</span></p>
+        <canvas class="curve"></canvas>
+      </div>
+      <div class="panel">
+        <p class="title">
+          <span class="legend"><i class="free"></i>Curve only</span>
+          <span class="legend legend-cond"><i class="cond"></i>After locking</span>
+        </p>
+        <div class="joint-wrap">
+          <canvas class="joint"></canvas>
+          <select class="axis-pick pair-y" aria-label="vertical axis"></select>
+          <select class="axis-pick pair-x" aria-label="horizontal axis"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <span>Drag along a track, or in the plot, to lock a parameter. This tells the network its value, and shows what the curve then says about the others.</span>
+      <label><input type="checkbox" class="show-truth"> Show the true values</label>
+    </div>
+    <div class="params"></div>
+  </section>
+</div>
+<script src="data/cellulose_forward.js"></script>
+<script src="data/cellulose_data.js"></script>
+<script src="js/common.js"></script>
+<script src="js/cellulose_forward.js"></script>
+<script src="js/cellulose_infer.js"></script>
+</body>
+</html>
