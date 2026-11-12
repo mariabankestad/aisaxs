@@ -202,7 +202,7 @@
   root.querySelector(".fits-note").textContent =
     `${NR} starting points, ${D.settings.steps} gradient steps each, ${D.n_kept} fits kept: those whose loss is within ` +
     `${Math.round((ki.alpha - 1) * 100)} % of the mean loss of the best tenth. Tracks show the kept fits; the short marks are the other restarts. ` +
-    `The curve fixes the size distribution and the interior length scale. The densities it leaves open, in two families: shell and interior both lighter than the solvent, ` +
+    `The kept fits agree on the size distribution and the interior length scale. On the densities they split in two families: shell and interior both lighter than the solvent, ` +
     `as in the material behind the curve, or both denser. Scattering sees density differences squared, so the sign is lost. The shell thickness trades against the densities.`;
 
   const draw = throttled(() => { drawCurve(); drawJoint(); SHOW.forEach((s, k) => drawRow(k)); drawFit(); });

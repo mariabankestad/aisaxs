@@ -1,5 +1,7 @@
 ---
-layout: default
+layout: site
+title: SAXS of lipid nanoparticles, a walkthrough
+description: A conceptual introduction to how a SAXS curve of lipid nanoparticles becomes a structural readout, and why a neural surrogate is needed.
 ---
 
 # From a SAXS curve to lipid-nanoparticle structure
@@ -10,7 +12,9 @@ structural readout of the particle population, in concepts rather than
 code. General scientific background is assumed; no SAXS or
 machine-learning expertise required.
 
-The code, tutorials, and full technical reference are in the
+This is background reading. The interactive demonstration is on the
+[lipid nanoparticle page](lnp.html), and the code, tutorials and full
+technical reference are in the
 [GitHub repository](https://github.com/mariabankestad/aisaxs-poly).
 
 ## What does a SAXS experiment give us?
@@ -150,5 +154,5 @@ and the synthetic and experimental validation are in the paper.
 
 - [GitHub repository](https://github.com/mariabankestad/aisaxs-poly) — code,
   tutorials, full technical reference.
-- The paper (in preparation) for the mathematical treatment and the
+- The paper (accepted in npj) for the mathematical treatment and the
   synthetic and experimental validation.

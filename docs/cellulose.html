@@ -13,17 +13,17 @@
     <a class="brand" href="index.html">AI-SAXS</a>
     <a href="lnp.html">Lipid nanoparticles</a>
     <a class="current" href="cellulose.html">Cellulose</a>
-    <a href="model.html">How the method works</a>
+    <a href="model.html">How conditional inference works</a>
     <span class="spacer"></span>
     <a href="https://github.com/mariabankestad/aisaxs-sbi">Code</a>
   </nav>
 
   <h1>Cellulose</h1>
-  <p class="lead">A simulated SAXS curve with known parameters, analysed with the trained network from the paper. The network gives the posterior: all combinations of the nine structural parameters that fit the curve. Tell it one parameter, exactly or roughly, and it updates the answer without retraining.</p>
+  <p class="lead">A simulated SAXS curve with known parameters, analysed with the trained network from the paper. The network gives the posterior over nine structural parameters, as samples. Below you can see two different materials with almost the same curve, see which parameters the curve constrains, and then lock one parameter and watch the others change, without retraining.</p>
 
   <section id="forward">
     <h2>From material to curve</h2>
-    <p class="note">The simulated material and its curve. One random realization is kept fixed while the parameters change, so fibrils grow and thin out in place; the curve is averaged over six such realizations. Darker means denser. The fibril slider steps the simulator's packing parameter and shows the number of fibrils it actually places, per µm² of material. Scattering depends on the density differences, so the three densities change the curve but not the geometry.</p>
+    <p class="note"><b>Move a slider and watch the curve.</b> Press Keep this curve to compare two settings. One random realization is kept fixed while the parameters change, so fibrils grow and thin out in place; the curve is averaged over six such realizations. Darker means denser. The fibril slider steps the simulator's packing parameter and shows the number of fibrils it actually places, per µm² of material. Scattering depends on the density differences, so the three densities change the curve but not the geometry.</p>
     <div class="panels forward">
       <div class="panel">
         <p class="title"><span class="view-label">Whole simulated box, 372 nm</span><span class="spacer" style="flex:1"></span><button type="button" class="zoom">Zoom in</button></p>
@@ -42,7 +42,7 @@
   </section>
 
   <section id="infer">
-    <h2>From curve to material</h2>
+    <h2>From curve to possible materials</h2>
     <div class="pair">
       <figure>
         <img src="figures/cellulose_material_a.png" alt="Simulated cross-section shaded by density: dense fibrils in a lighter matrix and interstitial phase">
@@ -64,10 +64,10 @@
       <img src="figures/method_overview.png" alt="Overview figure from the paper. (a) A measured curve and a query: theta 1 and theta 2 unknown, theta 3 known with an uncertainty, theta 4 known exactly. (b) An encoder compresses the curve into K summary tokens, computed once and reused across queries. (c) A conditional flow transforms noise at t = 0 into the posterior at t = 1 for the unknown parameters, with the summary tokens and the known parameters as fixed conditioning. (d) The joint posterior of theta 1 and theta 2.">
     </figure>
     <p class="note">The overview figure from the paper. (a)&nbsp;A curve is given together with a question. In the example, θ₁ and θ₂ are unknown, θ₃ is known with an uncertainty and θ₄ is known exactly. (b)&nbsp;The curve is compressed into a few summary tokens, which are computed once and reused for every question. (c)&nbsp;A flow transforms noise into samples of the unknown parameters, with the known information kept fixed as input. (d)&nbsp;The result is the joint posterior of the unknown parameters.</p>
-    <p class="note">On this page the curve is the simulated SAXS curve above and the parameters are the nine structural parameters. Locking a parameter below makes it known, and the same trained network is asked again. Whether the curve is compatible with the locked value is assessed separately. The network itself is described on the page <a href="model.html">How the method works</a>.</p>
+    <p class="note">On this page the curve is the simulated SAXS curve above and the parameters are the nine structural parameters. Locking a parameter below makes it known, and the same trained network is asked again. Whether the curve is compatible with the locked value is assessed separately. The network itself is described on the page <a href="model.html">How conditional inference works</a>.</p>
 
     <h3>What the curve says about each parameter</h3>
-    <p class="note">Posterior samples from one of the three trained networks, precomputed for a grid of known values. Window 0.01&ndash;0.30 &Aring;<sup>&minus;1</sup>. The curve fixes the fibril radius almost to a point, and the size spread, packing and separation nearly as closely; the densities and the matrix fraction it leaves open, and with them the number of fibrils per area. Lock the radius at another value and the check flags it: the curve does not allow that value. The number shown by the check is a percentile; below 0.01 it is flagged as a conflict.</p>
+    <p class="note">Posterior samples from one of the three trained networks, precomputed for a grid of known values. Window 0.01&ndash;0.30 &Aring;<sup>&minus;1</sup>. The posterior pins the fibril radius almost to a point, and the size spread, packing and separation nearly as closely; the densities and the matrix fraction the curve leaves open, and with them the number of fibrils per area. Lock the radius at another value and the check flags it: the curve does not allow that value. The number shown by the check is a percentile; below 0.01 it is flagged as a conflict.</p>
 
     <div class="panels">
       <div class="panel">

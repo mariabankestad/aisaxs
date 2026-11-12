@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI-SAXS</title>
-<meta name="description" content="Machine-learning methods for small-angle X-ray scattering.">
+<meta name="description" content="Two machine-learning approaches to interpreting small-angle X-ray scattering curves, with interactive demonstrations.">
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
@@ -12,19 +12,20 @@
   <header class="home">
     <h1>AI-SAXS</h1>
     <p class="lead">A SAXS curve does not uniquely determine the material that produced it: different structures can give almost the same curve. We develop machine-learning methods that find the structures that fit a curve, and show what the curve can and cannot tell us.</p>
+    <p class="lead-sub">The two projects below take different approaches. For lipid nanoparticles, a fast copy of the simulator is fitted from many starting points, and the fits that match equally well are compared. For cellulose, one network learns the posterior directly, and updates it when some parameters are already known.</p>
   </header>
 
   <main class="projects">
     <article>
       <div class="picture"><img src="figures/lnp_workflow.png" alt="Workflow: a simulator gives SAXS curves for a nanoparticle, a neural network learns to predict them, the curves are averaged over a size distribution, and the parameters are fitted to experimental data."></div>
       <div class="text">
-        <p class="topic">Lipid nanoparticles</p>
-        <h2>A differentiable machine learning small-angle X-ray scattering analysis framework for structure elucidation of lipid nanoparticles</h2>
-        <p><span class="tag">What you get</span>The fits that match a measured curve equally well. They show which structural parameters the curve fixes and which it leaves open.</p>
-        <p><span class="tag">How</span>A neural network imitates the physical simulator (a surrogate). It is fast enough to start the fit from a thousand points.</p>
-        <p class="status">Accepted in npj</p>
+        <h2>Lipid nanoparticles</h2>
+        <p class="approach">Neural surrogate and multi-start fitting</p>
+        <p><span class="tag">What you get</span>Parameter sets that reproduce the measured curve about equally well. Where they agree, the parameter is well constrained; where they spread, it is not.</p>
+        <p><span class="tag">How</span>A neural network approximates the physical simulator (a surrogate). It is fast enough to start the fit from a thousand points.</p>
+        <p class="paper">A differentiable machine learning small-angle X-ray scattering analysis framework for structure elucidation of lipid nanoparticles. <span class="status">Accepted in npj.</span></p>
         <div class="links">
-          <a class="main" href="lnp.html">Try it</a>
+          <a class="main" href="lnp.html">Explore the fits</a>
           <a href="https://github.com/mariabankestad/aisaxs-poly">Code</a>
           <a href="https://doi.org/10.5281/zenodo.20338599">Data</a>
           <a href="lnp_saxs_walkthrough.html">Walkthrough</a>
@@ -35,14 +36,14 @@
     <article>
       <div class="picture"><img src="figures/conditional_inference.gif" alt="Animation of a toy example: a curve gives a posterior over size spread and separation, and added information changes that posterior without retraining."></div>
       <div class="text">
-        <p class="topic">Cellulose</p>
-        <h2>Amortized conditional inference under changing parameter information in small-angle X-ray scattering</h2>
-        <p><span class="tag">What you get</span>All combinations of structural parameters that fit a curve (the posterior), updated when you tell it what you already know about some of them.</p>
+        <h2>Cellulose</h2>
+        <p class="approach">Conditional posterior inference with flow matching</p>
+        <p><span class="tag">What you get</span>The posterior: how probable each combination of structural parameters is, given the curve, as samples. It updates when you tell the network what you already know about some parameters.</p>
         <p><span class="tag">How</span>One neural network, trained on simulated curves with flow matching. A new question needs no retraining.</p>
-        <p class="status">Preprint on arXiv soon</p>
+        <p class="paper">Amortized conditional inference under changing parameter information in small-angle X-ray scattering. <span class="status">Preprint on arXiv soon.</span></p>
         <div class="links">
-          <a class="main" href="cellulose.html">Try it</a>
-          <a href="model.html">How the method works</a>
+          <a class="main" href="cellulose.html">Explore the posterior</a>
+          <a href="model.html">How conditional inference works</a>
           <a href="https://github.com/mariabankestad/aisaxs-sbi">Code</a>
         </div>
       </div>
@@ -55,8 +56,9 @@
       <dt>Curve</dt><dd>The measured SAXS intensity against scattering angle.</dd>
       <dt>Parameters</dt><dd>The numbers that describe the structure, such as a radius or a density.</dd>
       <dt>Simulator</dt><dd>The physical calculation that turns parameters into a curve.</dd>
+      <dt>Surrogate</dt><dd>A network trained to give the simulator's curve, much faster.</dd>
       <dt>Network</dt><dd>A neural network trained on curves from the simulator.</dd>
-      <dt>Posterior</dt><dd>All parameter combinations that fit a curve, and how likely each one is.</dd>
+      <dt>Posterior</dt><dd>How probable each parameter combination is, given the curve, the simulator and the parameter ranges. The network gives it as samples.</dd>
       <dt>Known exactly, known roughly</dt><dd>A parameter value that we give to the network, as a fixed number or with an uncertainty.</dd>
     </dl>
   </section>
