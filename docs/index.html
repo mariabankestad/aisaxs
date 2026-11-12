@@ -9,10 +9,16 @@
 </head>
 <body>
 <div class="page">
+  <nav class="top">
+    <a class="brand" href="index.html">AI-SAXS</a>
+    <a href="lnp.html">Lipid nanoparticles</a>
+    <a href="cellulose.html">Cellulose</a>
+    <a href="model.html">How conditional inference works</a>
+  </nav>
   <header class="home">
     <h1>AI-SAXS</h1>
     <p class="lead">A SAXS curve does not uniquely determine the material that produced it: different structures can give almost the same curve. We develop machine-learning methods that find the structures that fit a curve, and show what the curve can and cannot tell us.</p>
-    <p class="lead-sub">The two projects below take different approaches. For lipid nanoparticles, a fast copy of the simulator is fitted from many starting points, and the fits that match equally well are compared. For cellulose, one network learns the posterior directly, and updates it when some parameters are already known.</p>
+    <p class="lead-sub">On both project pages you can go both ways: change a simulated material and see its curve, or start from a curve and see which structures fit it. The two projects take different approaches to the second step. For lipid nanoparticles, a fast copy of the simulator is fitted from many starting points, and the fits that match equally well are compared. For cellulose, one network learns the posterior directly, and updates it when some parameters are already known.</p>
   </header>
 
   <main class="projects">
@@ -25,11 +31,10 @@
         <p><span class="tag">How</span>A neural network approximates the physical simulator (a surrogate). It is fast enough to start the fit from a thousand points.</p>
         <p class="paper">A differentiable machine learning small-angle X-ray scattering analysis framework for structure elucidation of lipid nanoparticles. <span class="status">Accepted in npj.</span></p>
         <div class="links">
-          <a class="main" href="lnp.html">Explore the fits</a>
-          <a href="https://github.com/mariabankestad/aisaxs-poly">Code</a>
-          <a href="https://doi.org/10.5281/zenodo.20338599">Data</a>
-          <a href="lnp_saxs_walkthrough.html">Walkthrough</a>
+          <a class="main" href="lnp.html#forward">Explore the simulator</a>
+          <a class="main" href="lnp.html#infer">Explore the fits</a>
         </div>
+        <p class="more"><a href="lnp_saxs_walkthrough.html">Walkthrough</a> · <a href="https://github.com/mariabankestad/aisaxs-poly">Code</a> · <a href="https://doi.org/10.5281/zenodo.20338599">Data</a></p>
       </div>
     </article>
 
@@ -42,10 +47,10 @@
         <p><span class="tag">How</span>One neural network, trained on simulated curves with flow matching. A new question needs no retraining.</p>
         <p class="paper">Amortized conditional inference under changing parameter information in small-angle X-ray scattering. <span class="status">Preprint on arXiv soon.</span></p>
         <div class="links">
-          <a class="main" href="cellulose.html">Explore the posterior</a>
-          <a href="model.html">How conditional inference works</a>
-          <a href="https://github.com/mariabankestad/aisaxs-sbi">Code</a>
+          <a class="main" href="cellulose.html#forward">Explore the simulator</a>
+          <a class="main" href="cellulose.html#infer">Explore the posterior</a>
         </div>
+        <p class="more"><a href="model.html">How conditional inference works</a> · <a href="https://github.com/mariabankestad/aisaxs-sbi">Code</a></p>
       </div>
     </article>
   </main>

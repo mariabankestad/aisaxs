@@ -19,7 +19,7 @@ body {
 a { color: var(--navy); }
 
 /* home */
-header.home { padding: 72px 0 40px; }
+header.home { padding: 48px 0 40px; }
 header.home h1 { margin: 0 0 16px; color: var(--navy); font-size: 44px; line-height: 1.1; }
 .lead { max-width: 720px; margin: 0; font-size: 20px; line-height: 1.5; }
 .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding-bottom: 56px; }
@@ -39,6 +39,7 @@ article h2 { margin: 0 0 2px; font-size: 24px; line-height: 1.3; }
 .links a.main { background: var(--navy); border-color: var(--navy); color: #fff; }
 .links a:hover, .links a:focus-visible { background: var(--pale); }
 .links a.main:hover, .links a.main:focus-visible { background: var(--blue); }
+.text p.more { margin: 12px 0 0; color: var(--muted); font-size: 15px; }
 footer { padding: 24px 0 48px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
 
 /* model pages */
