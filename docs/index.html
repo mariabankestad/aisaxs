@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI-SAXS</title>
-<meta name="description" content="Two machine-learning approaches to interpreting small-angle X-ray scattering curves, with interactive demonstrations.">
+<meta name="description" content="Try a SAXS measurement in the browser, and explore two machine-learning approaches to interpreting SAXS curves.">
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
@@ -17,9 +17,25 @@
   </nav>
   <header class="home">
     <h1>AI-SAXS</h1>
-    <p class="lead">A SAXS curve does not uniquely determine the material that produced it: different structures can give almost the same curve. We develop machine-learning methods that find the structures that fit a curve, and show what the curve can and cannot tell us.</p>
-    <p class="lead-sub">On both project pages you can go both ways: change a simulated material and see its curve, or start from a curve and see which structures fit it. The two projects take different approaches to the second step. For lipid nanoparticles, a fast copy of the simulator is fitted from many starting points, and the fits that match equally well are compared. For cellulose, one network learns the posterior directly, and updates it when some parameters are already known.</p>
+    <p class="lead">AI-SAXS is a research project developing new machine-learning methods for small-angle X-ray scattering (SAXS) analysis. SAXS provides information about the structure of materials on the nanometre scale, but interpreting the measurements is difficult: very different structures can produce almost identical scattering curves.</p>
+    <p class="lead-sub">We develop machine-learning models that learn from physical simulations to make structural inference faster and more flexible. This allows us to explore different structures consistent with a measurement and investigate which properties the data can constrain and which remain uncertain.</p>
   </header>
+
+  <section class="saxs-demo" id="saxs-demo">
+    <h2>Explore a SAXS measurement</h2>
+    <p class="demo-text">When X-rays pass through a sample, they scatter and produce a pattern on a detector. From this pattern, we calculate a SAXS curve that contains information about the particles.</p>
+    <p class="demo-try">Change the particle size and size distribution below and see what happens to the detector pattern and the curve.</p>
+    <canvas class="scene" aria-label="Sketch of a SAXS experiment: an X-ray beam passes through a thin capillary of liquid; a magnified view of the spot in the beam shows the spherical particles; scattered X-rays form a cone to a detector drawn in perspective, which shows rings."></canvas>
+    <div class="demo-row">
+      <div class="demo-controls"></div>
+      <figure><canvas class="face" aria-label="The detector seen face on: rings around a dark beam stop"></canvas><figcaption>The detector, face on</figcaption></figure>
+      <figure><canvas class="iq" aria-label="The SAXS curve: log intensity against q"></canvas><figcaption>The curve: the average around the rings</figcaption></figure>
+    </div>
+  </section>
+
+  <div class="projects-intro">
+    <p class="bridge">So far, we've gone from particle structure to SAXS curve. Our research focuses on the harder direction: using a measured curve to learn about the structure. The two projects below approach this differently.</p>
+  </div>
 
   <main class="projects">
     <article>
@@ -28,8 +44,8 @@
         <h2>Lipid nanoparticles</h2>
         <p class="approach">Neural surrogate and multi-start fitting</p>
         <p><span class="tag">What you get</span>Parameter sets that reproduce the measured curve about equally well. Where they agree, the parameter is well constrained; where they spread, it is not.</p>
-        <p><span class="tag">How</span>A neural network approximates the physical simulator (a surrogate). It is fast enough to start the fit from a thousand points.</p>
-        <p class="paper">A differentiable machine learning small-angle X-ray scattering analysis framework for structure elucidation of lipid nanoparticles. <span class="status">Accepted in npj.</span></p>
+        <p><span class="tag">How</span>Detailed scattering simulations are slow. A neural network learns to approximate the simulator (a surrogate), which makes it fast enough to start the fit from a thousand points.</p>
+        <p class="paper">A differentiable machine learning small-angle X-ray scattering analysis framework for structure elucidation of lipid nanoparticles. <span class="status">Accepted in npj Computational Materials.</span></p>
         <div class="links">
           <a class="main" href="lnp.html#forward">Explore the simulator</a>
           <a class="main" href="lnp.html#infer">Explore the fits</a>
@@ -44,7 +60,7 @@
         <h2>Cellulose</h2>
         <p class="approach">Conditional posterior inference with flow matching</p>
         <p><span class="tag">What you get</span>The posterior: how probable each combination of structural parameters is, given the curve, as samples. It updates when you tell the network what you already know about some parameters.</p>
-        <p><span class="tag">How</span>One neural network, trained on simulated curves with flow matching. A new question needs no retraining.</p>
+        <p><span class="tag">How</span>One generative neural network, trained on simulated curves with flow matching. It answers for any curve and any set of known parameters, without retraining. Applied to measurements of paper during hydration.</p>
         <p class="paper">Amortized conditional inference under changing parameter information in small-angle X-ray scattering. <span class="status">Preprint on arXiv soon.</span></p>
         <div class="links">
           <a class="main" href="cellulose.html#forward">Explore the simulator</a>
@@ -70,5 +86,7 @@
 
   <footer>AI-SAXS is a collaboration between academic, industry and synchrotron partners, including MAX IV.</footer>
 </div>
+<script src="js/common.js"></script>
+<script src="js/saxs_hero.js"></script>
 </body>
 </html>
