@@ -128,7 +128,7 @@
     const t = D.example.truth;
     const set = { radius: t.radius_nm, spread: t.size_cv, sep: t.min_space_nm, count: t.no_rods_per_unit, vf: t.volfrac_grf, domain: 48 / t.kappa_sc };
     Object.assign(state, set); state.rho = [...t.rho];
-    syncSliders(); draw();
+    syncSliders(); startRun(); draw();
   });
 
   // ---- comparison options ---------------------------------------------------------------
@@ -312,13 +312,92 @@
     const toPos = () => Math.round(STEPS * (log ? Math.log(state[key] / lo) / Math.log(hi / lo) : (state[key] - lo) / (hi - lo)));
     const fromPos = (v) => { const u = v / STEPS; state[key] = log ? lo * (hi / lo) ** u : lo + u * (hi - lo); };
     const show = addSlider(groups[g], label, toPos, fromPos, fmt ? () => fmt(state[key]) : () => fmtArea(perArea()), key);
+    inputs[key].input.addEventListener("input", () => stopRun(true));     // fade while dragging
+    inputs[key].input.addEventListener("change", () => startRun());       // new structure on release
     if (!fmt) showArea = show;
   }
   ["Fibril density", "Matrix density", "Interstitial density"].forEach((label, k) => {
     addSlider(root.querySelector(".densities"), label, () => Math.round((state.rho[k] - 0.5) / 0.5 * STEPS),
       (v) => { state.rho[k] = 0.5 + 0.5 * v / STEPS; }, () => state.rho[k].toFixed(2), `rho${k}`);
+    inputs[`rho${k}`].input.addEventListener("input", () => drawStructure());   // colours only
   });
   function syncSliders() { for (const s of Object.values(inputs)) { s.input.value = s.toPos(); s.show(); } }
+
+
+  // ---- the simulator itself (js/cellulose_sim.js in a worker): one structure, no curve ----
+  // The box keeps the paper's 0.36 nm pixel: N pixels over N / 2048 of the paper's box.
+  const run = { worker: null, ready: false, N: 0, ms: 0, fibrils: 0, pic: null };
+  const runBtn = el(".run"), boxSel = el(".box"), zoomSel = el(".zoom"), simStatus = el(".sim-status");
+  const structCanvas = el("canvas.structure");
+  function geo() {
+    const g = new Array(6);
+    for (const p of P) { const [name, raw] = p[5](state[p[0]]); g[K[name]] = raw; }
+    return g;
+  }
+  function startRun() {
+    stopRun(false);
+    const N = Number(boxSel.value);
+    run.ready = false;
+    run.worker = new Worker("js/sim_worker.js");
+    run.worker.onmessage = (e) => {
+      const d = e.data;
+      Object.assign(run, { ready: true, N: d.N, ms: d.ms, fibrils: d.fibrils, pic: { m: d.m, cov: d.cov, N: d.N } });
+      stopRun(false); drawStructure(); showRun();
+    };
+    run.worker.onerror = (e) => { simStatus.textContent = `The simulator stopped with an error: ${e.message}`; stopRun(false); };
+    run.worker.postMessage({ geo: geo(), N, fov: N / 2048, seed: (Math.random() * 2 ** 32) >>> 0 });
+    runBtn.textContent = "Building…"; runBtn.classList.add("stop");
+    simStatus.textContent = "Building a structure…";
+  }
+  function stopRun(stale) {
+    if (run.worker) { run.worker.terminate(); run.worker = null; }
+    runBtn.textContent = run.pic ? "Simulate another" : "Simulate a structure"; runBtn.classList.remove("stop");
+    if (stale && run.ready) { run.ready = false; drawStructure(); simStatus.textContent = "Let go of the slider to build a structure with the new settings."; }
+  }
+  runBtn.addEventListener("click", () => (run.worker ? stopRun(false) : startRun()));
+  boxSel.addEventListener("change", () => startRun());          // a new structure in the new box
+  zoomSel.addEventListener("change", () => drawStructure());
+  function showRun() {
+    const box = Math.round(743.5 * run.N / 2048);
+    simStatus.innerHTML = `One structure, ${box}&nbsp;nm wide, built in ${(run.ms / 1000).toFixed(2)}&nbsp;s, with ${run.fibrils.toLocaleString("en-US")} fibrils.`;
+  }
+
+  // Blue tones as on the cellulose page: lightness from density (0.5 pale, 1.0 navy).
+  function tone(rho) {
+    const l = (94 - (rho - 0.5) * 128) / 100, s = 0.5, h = 210 / 360;
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+    const f = (t) => { t = (t + 1) % 1; return t < 1 / 6 ? p + (q - p) * 6 * t : t < 0.5 ? q : t < 2 / 3 ? p + (q - p) * (2 / 3 - t) * 6 : p; };
+    return [f(h + 1 / 3), f(h), f(h - 1 / 3)].map((v) => Math.round(v * 255));
+  }
+  const picCanvas = document.createElement("canvas");
+  function drawStructure() {
+    const g = state.rho.map(tone);
+    [["k-fib", 0], ["k-mat", 1], ["k-int", 2]].forEach(([c, k]) => { el(`.sim-key .${c}`).style.background = `rgb(${g[k]})`; });
+    const { ctx, w, h } = fitCanvas(structCanvas);
+    if (!run.pic) {
+      ctx.fillStyle = C.muted; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText("No structure yet", w / 2, h / 2);
+      return;
+    }
+    const { m, cov, N } = run.pic;
+    if (picCanvas.width !== N) { picCanvas.width = picCanvas.height = N; }
+    const pctx = picCanvas.getContext("2d"), img = pctx.createImageData(N, N), px = img.data;
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {   // array axis 0 drawn left to right
+      const a = i * N + j, o = 4 * (j * N + i);
+      if (m[a]) { px[o] = g[1][0]; px[o + 1] = g[1][1]; px[o + 2] = g[1][2]; }
+      else { const f = cov[a]; for (let c = 0; c < 3; c++) px[o + c] = g[2][c] + (g[0][c] - g[2][c]) * f; }
+      px[o + 3] = 255;
+    }
+    pctx.putImageData(img, 0, 0);
+    const z = Number(zoomSel.value), src = N / z, nm = 743.5 * N / 2048 / z;
+    ctx.imageSmoothingEnabled = z === 1;
+    ctx.drawImage(picCanvas, (N - src) / 2, (N - src) / 2, src, src, 0, 0, w, h);
+    if (!run.ready) { ctx.fillStyle = "rgba(255,255,255,0.6)"; ctx.fillRect(0, 0, w, h); }
+    const bar = [10, 20, 50, 100].find((b) => b / nm * w >= 40) || 100, bw = bar / nm * w, label = `${bar} nm`;
+    ctx.fillStyle = "rgba(255,255,255,0.85)"; ctx.fillRect(8, h - 30, bw + 20 + ctx.measureText(label).width + 10, 22);
+    ctx.fillStyle = C.ink; ctx.fillRect(12, h - 20, bw, 3);
+    ctx.textBaseline = "middle"; ctx.textAlign = "left"; ctx.fillText(label, bw + 18, h - 19);
+  }
 
   // ---- self-check against the Python export (console only) --------------------------------
   {
@@ -332,7 +411,9 @@
   }
 
   readOptions();
-  window.addEventListener("resize", draw);
+  window.addEventListener("resize", () => { draw(); drawStructure(); });
+  drawStructure();
+  startRun();                                                  // a first structure for the default settings
   setUser({ q: D.example.q, I: D.example.I }, "the example", true);    // the page starts with the example
   draw();
 })();

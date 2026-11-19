@@ -52,6 +52,19 @@
       <div class="group"><h4>Densities</h4><div class="densities"></div></div>
     </div>
 
+    <div class="panel try-sim">
+      <canvas class="structure" aria-label="The latest structure built by the simulator: fibrils, matrix and the interstitial phase"></canvas>
+      <div class="sim-side">
+        <p class="sim-buttons">
+          <button type="button" class="run">Simulate a structure</button>
+          <label>Box <select class="box"><option value="256">93 nm</option><option value="512" selected>186 nm</option><option value="1024">372 nm</option><option value="2048">744 nm, as in the paper</option></select></label>
+          <label>Picture <select class="zoom"><option value="1">whole box</option><option value="4">detail</option></select></label>
+        </p>
+        <p class="sim-status" aria-live="polite">A structure from the simulator, with the settings of the sliders above. A new one is built each time you let go of a slider.</p>
+        <p class="sim-key"><span><i class="k-fib"></i>fibrils</span><span><i class="k-mat"></i>matrix</span><span><i class="k-int"></i>interstitial phase</span></p>
+      </div>
+    </div>
+
     <h3>Your file</h3>
     <p class="note">A text or CSV file with q in the first column and intensity in the second. Other columns, such as errors, are ignored, and so are lines that do not start with a number. Choose the unit of q. The page guesses it from the largest value. The example is a curve from the simulator itself, with noise added as in a measurement, so its true parameters are known. The <a href="data/example_curve.csv" download>example file</a> shows the format.</p>
 
@@ -60,6 +73,9 @@
 
     <h3>Where the simulated curves come from</h3>
     <p class="note">The curves are computed by a surrogate, a small neural network (0.24&nbsp;MB) trained on the 131,072 simulated structures that were used to train the network in the <a href="https://arxiv.org/abs/2611.18773">paper</a>. It reproduces the simulator to about 2&nbsp;% in intensity, which is about how much the simulator itself varies between random seeds. The network gives three parts of the curve for each structure, and the densities combine them exactly, so the densities are not learned. Because the network runs in your browser, the curve updates as you move a slider.</p>
+
+    <h3>The structure</h3>
+    <p class="note">The picture is a cross-section built by the same simulator that made the training data, running in your browser. Each time you let go of a slider it builds a new random structure with those settings, and the button builds another with the same settings. The pixels are 0.36&nbsp;nm, as in the paper. The default piece is 186&nbsp;nm wide. The paper used 744&nbsp;nm, which takes a second or two. The picture only shows the structure. The curve in the plot comes from the surrogate, which gives the average over many structures. The densities do not change the structure, only the colours.</p>
 
     <h3>What a match means</h3>
     <p class="note">This page is meant for exploration. The simulator describes one kind of structure: cellulose fibrils, a matrix, and an interstitial phase between them. A close match does not show that your sample has this structure, and quite different settings can match a curve equally well. The <a href="cellulose.html#infer">cellulose page</a> shows how much a single curve leaves open.</p>

@@ -396,3 +396,15 @@ pre.code { max-width: 100%; } table.example { display: block; overflow-x: auto; 
 .try-opts select, .try-opts input { font: inherit; font-size: 14px; padding: 3px 4px; color: var(--ink); }
 .try-opts input[type=text] { width: 4.2em; }
 .try-opts input:disabled { color: #b0b7be; }
+.legend i.sim { background: #2b8a6e; }
+.panel.try-sim { display: grid; grid-template-columns: 300px 1fr; gap: 18px; margin-top: 14px; padding: 12px; }
+.panel.try-sim canvas.structure { width: 300px; height: 300px; border-radius: 4px; background: var(--pale); }
+.sim-side { min-width: 0; font-size: 15px; color: var(--muted); }
+.sim-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 0 0 10px; }
+.sim-buttons button { padding: 7px 14px; border: 1px solid #2b8a6e; border-radius: 6px; background: #2b8a6e; color: #fff; font: inherit; font-size: 15px; cursor: pointer; }
+.sim-buttons button.stop { background: #fff; color: #2b8a6e; }
+.sim-buttons select { max-width: none; font: inherit; font-size: 14px; padding: 3px 4px; color: var(--ink); }
+.sim-status { margin: 0 0 10px; line-height: 1.5; }
+.sim-key { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; font-size: 14px; }
+.sim-key i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; border: 1px solid rgba(0,0,0,0.08); }
+@media (max-width: 760px) { .panel.try-sim { grid-template-columns: 1fr; } .panel.try-sim canvas.structure { width: 100%; height: auto; aspect-ratio: 1; max-width: 360px; } }
