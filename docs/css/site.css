@@ -380,3 +380,19 @@ pre.code { max-width: 100%; } table.example { display: block; overflow-x: auto; 
 .demo-controls { padding-top: 8px; }
 .projects-intro .lead-sub { margin: 0 0 24px; }
 @media (max-width: 760px) { .demo-row { grid-template-columns: 1fr; } .demo-row canvas.face { max-width: 280px; margin: 0 auto; } }
+
+/* Test your own curve (try.html) */
+.try-load { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 22px; }
+.try-load button { padding: 7px 14px; border: 1px solid var(--blue); border-radius: 6px; background: #fff; color: var(--navy); font: inherit; font-size: 15px; cursor: pointer; }
+.try-load button.main { background: var(--navy); border-color: var(--navy); color: #fff; }
+.try-load button:hover { border-color: var(--navy); }
+.try-load .unit { font-size: 15px; color: var(--muted); }
+.try-load select { font: inherit; font-size: 14px; padding: 3px 4px; }
+.status { min-height: 1.5em; margin: 12px 0 0; font-size: 15px; color: var(--ink); }
+.try-plot { margin-top: 12px; }
+.panel.try-plot canvas.curve { height: 340px; }
+.panel.try-plot canvas.diff { height: 120px; margin-top: 4px; }
+.try-opts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; margin-top: 12px; font-size: 15px; color: var(--muted); }
+.try-opts select, .try-opts input { font: inherit; font-size: 14px; padding: 3px 4px; color: var(--ink); }
+.try-opts input[type=text] { width: 4.2em; }
+.try-opts input:disabled { color: #b0b7be; }

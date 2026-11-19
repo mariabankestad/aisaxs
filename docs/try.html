@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-SAXS: test your own curve</title>
+<meta name="description" content="Load a SAXS curve and compare it with curves from the cellulose simulator, computed in the browser by a small neural network.">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<div class="page model">
+  <nav class="top">
+    <a class="brand" href="index.html">AI-SAXS</a>
+    <a href="lnp.html">Lipid nanoparticles</a>
+    <a href="cellulose.html">Cellulose</a>
+    <a href="model.html">How conditional inference works</a>
+    <a class="current" href="try.html">Test your own curve</a>
+    <span class="spacer"></span>
+    <a href="https://github.com/mariabankestad/aisaxs-sbi">Code</a>
+  </nav>
+
+  <h1>Test your own curve</h1>
+  <p class="lead">Load a SAXS curve and compare it with curves from the cellulose simulator. Move the sliders to change the material and see how close a simulated curve comes to yours. The file is read in your browser and is not uploaded. Until you load a curve, the page shows a simulated example.</p>
+
+  <section id="try">
+    <div class="try-load">
+      <button type="button" class="load main">Load your curve</button>
+      <input type="file" class="file" accept=".txt,.csv,.dat,.tsv,text/plain" hidden>
+      <button type="button" class="example">Load an example</button>
+      <label class="unit">q in <select class="q-unit"><option value="A">Å⁻¹</option><option value="nm">nm⁻¹</option></select></label>
+      <button type="button" class="truth" hidden>Set the sliders to the example's true values</button>
+      <button type="button" class="clear">Clear</button>
+    </div>
+    <p class="status" aria-live="polite"></p>
+
+    <div class="try-opts">
+      <label>View <select class="view"><option value="log">log I</option><option value="kratky">Kratky: I·q²</option></select></label>
+      <label>Normalisation <select class="norm"><option value="fit">scale factor fitted over the window</option><option value="invariant">same ∫q²I dq over the window</option><option value="point">equal at one q</option></select></label>
+      <label>q <input type="text" inputmode="decimal" class="qref" value="0.05" disabled> Å⁻¹</label>
+      <label>Window <input type="text" inputmode="decimal" class="qlo" value="0.01"> to <input type="text" inputmode="decimal" class="qhi" value="0.3"> Å⁻¹</label>
+    </div>
+
+    <div class="panel try-plot">
+      <p class="title"><span class="legend"><i class="cond"></i>Simulated curve (surrogate)</span><span class="legend legend-user" hidden><i class="obs"></i>Loaded curve, normalised</span></p>
+      <canvas class="curve" aria-label="Log intensity against q: the simulated curve and the loaded curve"></canvas>
+      <canvas class="diff" aria-label="Difference between the loaded and the simulated curve, in decades"></canvas>
+    </div>
+
+    <div class="controls">
+      <div class="group"><h4>Fibrils</h4><div class="fibrils"></div></div>
+      <div class="group"><h4>Matrix</h4><div class="matrix"></div></div>
+      <div class="group"><h4>Densities</h4><div class="densities"></div></div>
+    </div>
+
+    <h3>Your file</h3>
+    <p class="note">A text or CSV file with q in the first column and intensity in the second. Other columns, such as errors, are ignored, and so are lines that do not start with a number. Choose the unit of q. The page guesses it from the largest value. The example is a curve from the simulator itself, with noise added as in a measurement, so its true parameters are known. The <a href="data/example_curve.csv" download>example file</a> shows the format.</p>
+
+    <h3>Normalisation and window</h3>
+    <p class="note">Measured intensities are in arbitrary units, so your curve is shifted to the height of the simulated curve and only the shape is compared. By default the shift is one scale factor fitted over the window, as in most fitting programs. The alternatives give both curves the same integral of q²I over the window, or make them equal at one q. Only points inside the window are used, for the normalisation and for the difference. The window can be at most 0.01&ndash;0.30&nbsp;&Aring;<sup>&minus;1</sup>, the range of the simulations. For its measured curves the paper used 0.05&ndash;0.30&nbsp;&Aring;<sup>&minus;1</sup>. The Kratky view plots I·q² against q, which shows the shape at middle and high q more clearly. The difference is always computed in log intensity.</p>
+
+    <h3>Where the simulated curves come from</h3>
+    <p class="note">The curves are computed by a surrogate, a small neural network (0.24&nbsp;MB) trained on the 131,072 simulated structures that were used to train the network in the <a href="https://arxiv.org/abs/2611.18773">paper</a>. It reproduces the simulator to about 2&nbsp;% in intensity, which is about how much the simulator itself varies between random seeds. The network gives three parts of the curve for each structure, and the densities combine them exactly, so the densities are not learned. Because the network runs in your browser, the curve updates as you move a slider.</p>
+
+    <h3>What a match means</h3>
+    <p class="note">This page is meant for exploration. The simulator describes one kind of structure: cellulose fibrils, a matrix, and an interstitial phase between them. A close match does not show that your sample has this structure, and quite different settings can match a curve equally well. The <a href="cellulose.html#infer">cellulose page</a> shows how much a single curve leaves open.</p>
+  </section>
+</div>
+<script src="data/surrogate.js"></script>
+<script src="js/common.js"></script>
+<script src="js/try_curve.js"></script>
+</body>
+</html>
