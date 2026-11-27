@@ -1,7 +1,8 @@
 // Homepage: a SAXS measurement in one picture. Spheres in a liquid, an X-ray beam,
 // the scattered intensity on the detector (side view and face on) and the curve.
 // Physics: polydisperse homogeneous spheres, I(q) = sum_R n(R) R^6 F(qR)^2, with a
-// Gaussian number distribution of radii. The scene is a sketch; angles are exaggerated.
+// Gaussian number distribution of radii. Dilute: no correlations between particles.
+// The scene is a sketch; angles are exaggerated.
 (function () {
   const root = document.getElementById("saxs-demo");
   if (!root) return;
@@ -35,11 +36,16 @@
   let seed = 7;
   const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
   const gauss = () => Math.sqrt(-2 * Math.log(rand() + 1e-12)) * Math.cos(2 * Math.PI * rand());
+  // The curve is for a dilute sample (no correlations between particles), so the picture
+  // must stay dilute too: few particles, placed so that they never touch, even at the
+  // largest radius and size spread of the sliders.
+  const R_MAX = 40, S_MAX = 0.40, GAP = 8;         // slider maxima; nm between surfaces
   const zoomParts = [];                            // positions in nm from the zoom centre
-  for (let t = 0; t < 4000 && zoomParts.length < 24; t++) {
-    const a = 2 * Math.PI * rand(), r = Math.sqrt(rand()) * 150, z = Math.max(-2, Math.min(2, gauss()));
+  for (let t = 0; t < 20000 && zoomParts.length < 9; t++) {
+    const a = 2 * Math.PI * rand(), r = Math.sqrt(rand()) * 290, z = Math.max(-2, Math.min(2, gauss()));
     const p = { x: r * Math.cos(a), y: r * Math.sin(a), z };
-    if (zoomParts.every((o) => Math.hypot(o.x - p.x, o.y - p.y) > 50)) zoomParts.push(p);
+    const far = (o) => Math.hypot(o.x - p.x, o.y - p.y) > R_MAX * (2 + S_MAX * (o.z + p.z)) + GAP;
+    if (zoomParts.every(far)) zoomParts.push(p);
   }
   const N = 256;
   const grain = Float32Array.from({ length: N * N }, () => Math.max(0.5, 1 + 0.15 * gauss()));
@@ -87,7 +93,7 @@
   const DET = { x: 770, w: 96, hl: 210, hr: 300 }; // left edge shorter: perspective
   const EXIT = { x: CAP.x + CAP.r, y: BY };
   const DC = { x: DET.x + DET.w / 2, y: BY };
-  const ZOOM = { x: 196, y: 112, r: 84, nmPerPx: 1.8 };  // about 300 nm across
+  const ZOOM = { x: 196, y: 112, r: 84, nmPerPx: 3.6 };  // about 600 nm across
   const SQ = { x: CAP.x - 5, y: BY - 5, s: 10 };
 
   function sphere(ctx, x, y, r) {
@@ -142,13 +148,13 @@
     ctx.strokeStyle = C.navy; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.arc(ZOOM.x, ZOOM.y, ZOOM.r, 0, 2 * Math.PI); ctx.stroke();
     ctx.fillStyle = C.muted; ctx.textAlign = "center"; ctx.font = "13px system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
-    ctx.fillText("inside the beam, about 300 nm across", ZOOM.x, ZOOM.y - ZOOM.r - 10);
-    const bar = 50 / ZOOM.nmPerPx;
+    ctx.fillText("inside the beam, about 600 nm across", ZOOM.x, ZOOM.y - ZOOM.r - 10);
+    const bar = 100 / ZOOM.nmPerPx;
     ctx.strokeStyle = C.ink; ctx.lineWidth = 2;
     const bx = ZOOM.x - ZOOM.r - 18 - bar;
     ctx.beginPath(); ctx.moveTo(bx, ZOOM.y + 40); ctx.lineTo(bx + bar, ZOOM.y + 40); ctx.stroke();
     ctx.fillStyle = C.muted;
-    ctx.fillText("50 nm", bx + bar / 2, ZOOM.y + 58);
+    ctx.fillText("100 nm", bx + bar / 2, ZOOM.y + 58);
 
     // scattered X-rays: a cone to the first bright ring after the centre
     const ring = Math.min(1, 5.76 / state.R / QMAX);    // first ring of a sphere, qR = 5.76

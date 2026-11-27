@@ -19,12 +19,13 @@
   <header class="home">
     <h1>AI-SAXS</h1>
     <p class="lead">AI-SAXS is a research project developing new machine-learning methods for small-angle X-ray scattering (SAXS) analysis. SAXS provides information about the structure of materials on the nanometre scale, but interpreting the measurements is difficult: very different structures can produce almost identical scattering curves.</p>
-    <p class="lead-sub">We develop machine-learning models that learn from physical simulations to make structural inference faster and more flexible. This allows us to explore different structures consistent with a measurement and investigate which properties the data can constrain and which remain uncertain.</p>
+    <p class="lead-sub">We develop machine-learning methods that learn from physical simulations to make structural inference faster and more flexible. This allows us to explore different structures consistent with a measurement and investigate which properties the data can constrain and which remain uncertain.</p>
+    <p class="lead-sub">We also build the physical simulators. They calculate the scattering numerically from a simulated structure, so we are not limited to structures that have an analytical formula. These simulations are slow, and machine learning is what makes them practical for analysing measurements.</p>
   </header>
 
   <section class="saxs-demo" id="saxs-demo">
     <h2>Explore a SAXS measurement</h2>
-    <p class="demo-text">When X-rays pass through a sample, they scatter and produce a pattern on a detector. From this pattern, we calculate a SAXS curve that contains information about the particles.</p>
+    <p class="demo-text">When X-rays pass through a sample, they scatter and produce a pattern on a detector. From this pattern, we calculate a SAXS curve that contains information about the particles. Here the particles are far apart, so the curve shows only their size and shape, not how they are arranged.</p>
     <p class="demo-try">Change the particle size and size distribution below and see what happens to the detector pattern and the curve.</p>
     <canvas class="scene" aria-label="Sketch of a SAXS experiment: an X-ray beam passes through a thin capillary of liquid; a magnified view of the spot in the beam shows the spherical particles; scattered X-rays form a cone to a detector drawn in perspective, which shows rings."></canvas>
     <div class="demo-row">
